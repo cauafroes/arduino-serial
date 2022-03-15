@@ -17,6 +17,7 @@ Options:
   -b, --baud=baudrate        Baudrate (bps) of Arduino (default 9600)
   -p, --port=serialport      Serial port Arduino is connected to
   -s, --send=string          Send string to Arduino
+  -L, --loop                 Runs in a loop until CTRL + C
   -S, --sendline=string      Send string with newline to Arduino
   -r, --receive              Receive string from Arduino & print it out
   -n  --num=num              Send a number as a single byte

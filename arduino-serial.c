@@ -64,6 +64,7 @@ void usage(void)
     "  -b, --baud=baudrate        Baudrate (bps) of Arduino (default 9600)\n"
     "  -p, --port=serialport      Serial port Arduino is connected to\n"
     "  -s, --send=string          Send string to Arduino\n"
+    "  -L, --loop                 Runs in a loop until CTLR + C\n"
     "  -S, --sendline=string      Send string with newline to Arduino\n"
     "  -i  --stdinput             Use standard input\n"
     "  -r, --receive              Receive string from Arduino & print it out\n"
@@ -114,6 +115,7 @@ int main(int argc, char *argv[])
         {"send",       required_argument, 0, 's'},
         {"sendline",   required_argument, 0, 'S'},
         {"stdinput",   no_argument,       0, 'i'},
+        {"loop",       no_argument,       0, 'L'},
         {"receive",    no_argument,       0, 'r'},
         {"flush",      no_argument,       0, 'F'},
         {"num",        required_argument, 0, 'n'},
@@ -125,7 +127,7 @@ int main(int argc, char *argv[])
     };
 
     while(1) {
-        opt = getopt_long (argc, argv, "hp:b:s:S:i:rFn:d:qe:t:",
+        opt = getopt_long (argc, argv, "hp:b:s:S:i:LrFn:d:qe:t:",
                            loptions, &option_index);
         if (opt==-1) break;
         switch (opt) {
@@ -193,6 +195,17 @@ int main(int argc, char *argv[])
             serialport_read_until(fd, buf, eolchar, buf_max, timeout);
             if( !quiet ) printf("read string:");
             printf("%s\n", buf);
+            break;
+        case 'L':
+            if( fd == -1 ) error("serial port not opened");
+            while (1)
+            {
+                memset(buf,0,buf_max);  //
+                serialport_read_until(fd, buf, eolchar, buf_max, timeout);
+                system("clear");
+                printf("%s", buf);
+                usleep(20);
+            }  
             break;
         case 'F':
             if( fd == -1 ) error("serial port not opened");
